@@ -26,6 +26,12 @@
 #include <stdarg.h>
 #include "printa.h"
 
+/* printf(3) man page */
+#define CONVS "diouxXeEfFgGaAcsCSpnm%"
+
+/* % + flags + width + precision + length + conversoin + NULL */
+#define SPEC_BUF_SIZE 16
+
 static int ovprintf(struct options *opts, const char *format, va_list ap)
 {
     int nbytes;
@@ -63,7 +69,8 @@ static int oprintf(struct options *opts, const char *format, ...)
 
 /* adjust the width of string specifiers to the display space intead of the
  * number of bytes for wide characters and oprintf them using the adjusted
- * display width
+ * display width; return -1 on an illegal specifier and -2 on too long a
+ * specifier
  *
  * compare
  *	printf("%10s|\n%10s|\n", "ABCD", "가나");
@@ -80,7 +87,7 @@ static int oprintf(struct options *opts, const char *format, ...)
  */
 int oprinta(struct options *opts, const char *format, va_list ap)
 {
-    char *fmt, *asis, *p, spec[10];
+    char *fmt, *asis, *p, spec[SPEC_BUF_SIZE];
     int nbytes = 0;
 
     /* make a copy so we can temporarily change the format string */
@@ -98,7 +105,7 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 
 	    /* skip % */
 	    while(*++q){
-		char *c = CONVERSIONS - 1;
+		char *c = CONVS - 1;
 
 		while(*++c && *q != *c);
 		if(*c){
@@ -195,8 +202,11 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 			*(q + 1) = tmp;
 		    }
 		    break;
-		}else
+		}else if(p_spec - spec < SPEC_BUF_SIZE - 2)
+		    /* 2 reserved for % and NULL */
 		    *p_spec++ = *q;
+		else
+		    return -2;
 	    }
 	    asis = (p = q) + 1;
 	}

@@ -92,6 +92,8 @@ int main()
     snprinta(buf, size, format, en1, en2, ko1, ko2);
     printf(buf);
 
+    printa("\n%-*.*s|%-*.*s|\n", 10, 2, "abcd", 10, 2, "가나다라");
+
     free(fmt);
 
     exit(0);

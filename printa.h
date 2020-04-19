@@ -26,9 +26,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-/* printf(3) man page */
-#define CONVERSIONS "diouxXeEfFgGaAcsCSpnm%"
-
 struct options
 {
     FILE *stream;
