@@ -154,6 +154,7 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 			s = va_arg(ap, char *);
 			if(width > 0){
 			    int wcount = wide_count(s);
+
 			    if(wcount){
 				width += wcount;
 				prec += prec > 0 ? wcount : 0;
