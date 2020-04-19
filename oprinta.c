@@ -187,7 +187,7 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 		}else
 		    *p_spec++ = *q;
 	    }
-	    p = asis = ++q;
+	    asis = (p = q) + 1;
 	}
 	p++;
     }
