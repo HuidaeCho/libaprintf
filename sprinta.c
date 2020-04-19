@@ -32,7 +32,7 @@ int sprinta(char *str, const char *format, ...)
 
     opts.stream = NULL;
     opts.str = opts._str = str;
-    opts.size = 0;
+    opts.size = -1;
 
     va_start(ap, format);
     nbytes = oprinta(&opts, format, ap);

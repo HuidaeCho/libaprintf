@@ -35,12 +35,10 @@ static int _vprintf(struct options *opts, const char *format, va_list ap)
     else if(opts->stream)
 	nbytes = vfprintf(opts->stream, format, ap);
     else{
-	if(opts->size >= 0){
-	    if((long int)opts->_size >= 0){
-		/* snprintf(str, 0, ...) prints garbage */
-		nbytes = vsnprintf(opts->_str, opts->_size, format, ap);
-		opts->_size -= nbytes;
-	    }
+	if((long int)opts->size >= 0){
+	    /* snprintf(str, 0, ...) prints garbage */
+	    nbytes = vsnprintf(opts->_str, opts->_size, format, ap);
+	    opts->_size -= nbytes;
 	}else
 	    /* snprintf(str, negative, ...) is equivalent to snprintf(str, ...)
 	     * because size_t is unsigned */
