@@ -102,7 +102,8 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 			char *p_tmp;
 			va_list ap_copy;
 
-			/* save this ap and use _vprintf() for non-wide characters */
+			/* save this ap and use _vprintf() for non-wide
+			 * characters */
 			va_copy(ap_copy, ap);
 
 			/* if string */
@@ -150,7 +151,8 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 				width += wcount;
 				prec += prec > 0 ? wcount : 0;
 				p_spec = spec;
-				p_spec += sprintf(p_spec, "%%%s%d", spec[0] == '-' ? "-" : "", width);
+				p_spec += sprintf(p_spec, "%%%s%d",
+					spec[0] == '-' ? "-" : "", width);
 				if(prec >= 0)
 				    p_spec += sprintf(p_spec, ".%d", prec);
 				*p_spec++ = 's';
