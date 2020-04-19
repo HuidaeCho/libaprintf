@@ -6,7 +6,7 @@ all: libprinta.so test
 clean:
 	$(RM) -f *.o test
 
-libprinta.so: wide_count.o printa.o sprinta.o fprinta.o
+libprinta.so: wide_count.o oprinta.o printa.o sprinta.o fprinta.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 test: test.c

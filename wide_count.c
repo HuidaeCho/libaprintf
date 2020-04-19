@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Name:         wide_count.c (part of libprinta, the print-aligned C library)
- * Repository:   https://github.com/HuidaeCho/libprinta
- * Author:       Huidae Cho
- * Since:        April 18, 2020
+ * Name:	wide_count.c (part of libprinta, the print-aligned C library)
+ * Repository:	https://github.com/HuidaeCho/libprinta
+ * Author:	Huidae Cho
+ * Since:	April 18, 2020
  *
  * Copyright (C) 2020, Huidae Cho <https://idea.isnew.info>
  *
