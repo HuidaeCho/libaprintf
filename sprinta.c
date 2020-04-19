@@ -20,13 +20,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stdarg.h>
 #include "printa.h"
 
-/* sprintf() version of printa() */
+/* sprintf() wrapper for oprinta() */
 int sprinta(char *str, const char *format, ...)
 {
     struct options opts;

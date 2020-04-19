@@ -23,6 +23,9 @@
 #ifndef _PRINTA_H_
 #define _PRINTA_H_
 
+#include <stdio.h>
+#include <stdarg.h>
+
 /* printf(3) man page */
 #define CONVERSIONS "diouxXeEfFgGaAcsCSpnm%"
 

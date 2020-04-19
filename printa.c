@@ -20,29 +20,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stdarg.h>
 #include "printa.h"
 
-/* adjust the width of string specifiers to the display space intead of the
- * number of bytes for wide characters and printf them using the adjusted
- * display width
- *
- * compare
- *	printf("%10s|\n%10s|\n", "ABCD", "가나");
------------
-      ABCD|
-    가나|
------------
- * and
- *	printa("%10s|\n%10s|\n", "ABCD", "가나");
------------
-      ABCD|
-      가나|
------------
- */
+/* printf() wrapper for oprinta() */
 int printa(const char *format, ...)
 {
     va_list ap;

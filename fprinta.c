@@ -21,12 +21,10 @@
  ******************************************************************************/
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stdarg.h>
 #include "printa.h"
 
-/* fprintf() version of printa() */
+/* fprintf() wrapper for oprinta() */
 int fprinta(FILE *stream, const char *format, ...)
 {
     struct options opts;

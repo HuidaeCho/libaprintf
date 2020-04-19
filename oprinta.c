@@ -65,7 +65,7 @@ static int _printf(struct options *opts, const char *format, ...)
     가나|
 -----------
  * and
- *	printa("%10s|\n%10s|\n", "ABCD", "가나");
+ *	oprinta(&opts, "%10s|\n%10s|\n", "ABCD", "가나");
 -----------
       ABCD|
       가나|
