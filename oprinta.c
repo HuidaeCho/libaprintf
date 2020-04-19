@@ -26,7 +26,7 @@
 #include <stdarg.h>
 #include "printa.h"
 
-static int _vprintf(struct options *opts, const char *format, va_list ap)
+static int ovprintf(struct options *opts, const char *format, va_list ap)
 {
     int nbytes;
 
@@ -49,20 +49,20 @@ static int _vprintf(struct options *opts, const char *format, va_list ap)
     return nbytes;
 }
 
-static int _printf(struct options *opts, const char *format, ...)
+static int oprintf(struct options *opts, const char *format, ...)
 {
     va_list ap;
     int nbytes;
 
     va_start(ap, format);
-    nbytes = _vprintf(opts, format, ap);
+    nbytes = ovprintf(opts, format, ap);
     va_end(ap);
 
     return nbytes;
 }
 
 /* adjust the width of string specifiers to the display space intead of the
- * number of bytes for wide characters and _printf them using the adjusted
+ * number of bytes for wide characters and oprintf them using the adjusted
  * display width
  *
  * compare
@@ -93,7 +93,7 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 
 	    /* print the string before this specifier */
 	    *p = 0;
-	    nbytes += _printf(opts, asis);
+	    nbytes += oprintf(opts, asis);
 	    *p = '%';
 
 	    /* skip % */
@@ -105,11 +105,11 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 		    char tmp;
 		    /* found a conversion specifier */
 		    if(*c == 's'){
-			int width = -1, prec = -1, use_printf = 1;
+			int width = -1, prec = -1, use_ovprintf = 1;
 			char *p_tmp, *s;
 			va_list ap_copy;
 
-			/* save this ap and use _vprintf() for non-wide
+			/* save this ap and use ovprintf() for non-wide
 			 * characters */
 			va_copy(ap_copy, ap);
 
@@ -165,23 +165,23 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 				    p_spec += sprintf(p_spec, ".%d", prec);
 				*p_spec++ = 's';
 				*p_spec = 0;
-				nbytes += _printf(opts, spec, s);
-				use_printf = 0;
+				nbytes += oprintf(opts, spec, s);
+				use_ovprintf = 0;
 			    }
 			}
-			if(use_printf){
+			if(use_ovprintf){
 			    tmp = *(q + 1);
 			    *(q + 1) = 0;
-			    nbytes += _vprintf(opts, p, ap_copy);
+			    nbytes += ovprintf(opts, p, ap_copy);
 			    *(q + 1) = tmp;
 			}
 
 			va_end(ap_copy);
 		    }else{
-			/* else use _vprintf() */
+			/* else use ovprintf() */
 			tmp = *(q + 1);
 			*(q + 1) = 0;
-			nbytes += _vprintf(opts, p, ap);
+			nbytes += ovprintf(opts, p, ap);
 			*(q + 1) = tmp;
 		    }
 		    break;
@@ -195,7 +195,7 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 
     /* print the remaining string */
     *p = 0;
-    nbytes += _printf(opts, asis);
+    nbytes += oprintf(opts, asis);
     *p = '%';
 
     return nbytes;
