@@ -106,7 +106,7 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 		    /* found a conversion specifier */
 		    if(*c == 's'){
 			int width = -1, prec = -1, use_printf = 1;
-			char *p_tmp;
+			char *p_tmp, *s;
 			va_list ap_copy;
 
 			/* save this ap and use _vprintf() for non-wide
@@ -151,8 +151,8 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 			    return -1;
 			}
 
+			s = va_arg(ap, char *);
 			if(width > 0){
-			    char *s = va_arg(ap, char *);
 			    int wcount = wide_count(s);
 			    if(wcount){
 				width += wcount;
