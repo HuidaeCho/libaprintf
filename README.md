@@ -2,7 +2,7 @@
 
 Libprinta is the print-aligned C library. Functionally, it is similar to the [CJK Format](https://github.com/HuidaeCho/cjkformat) Python 3 module.
 
-In the C language, the `strlen()` of a CJK character is not 1 because `strlen()` returns the byte length of a string and CJK characters use more than one byte per character. For example, `strlen("가")` returns 3 because Hangul syllable Ga (가) consists of `0xEA`, `0xB0`, and `0x80`. The same byte length applies to `printf()`'s string specifiers (`%{width}s`). Again, "가" in `printf("%-10s|", "가")` will consume three bytes internally and leave seven spaces resulting in
+In the C language, the `strlen()` of a CJK character is not 1 because `strlen()` returns the byte length of a string and CJK characters use more than one byte per character. For example, `strlen("가")` returns 3 because Hangul syllable Ga (가) consists of `0xEA`, `0xB0`, and `0x80`. The same byte length applies to `printf()`'s string specifiers (`%s`). Again, "가" in `printf("%-10s|", "가")` will consume three bytes internally and leave seven spaces resulting in
 
 ![Ga misaligned](ga-misaligned.png "Ga misaligned")
 
