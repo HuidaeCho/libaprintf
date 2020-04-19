@@ -33,6 +33,7 @@ int fprinta(FILE *stream, const char *format, ...)
 
     opts.stream = stream;
     opts.str = NULL;
+    opts.size = -1;
 
     va_start(ap, format);
     nbytes = oprinta(&opts, format, ap);

@@ -57,6 +57,7 @@ int main()
     char *format = "%-10s|%-10s|\n%-10s|%-10s|\n", *fmt,
 	 *en1 = "ab", *en2 = "cd", *ko1 = "가나", *ko2 = "마바",
 	 buf[1024];
+    size_t size = 26;
 
     fmt = escape_newlines(format);
 
@@ -80,6 +81,15 @@ int main()
 	   "printf(buf);\n",
 	    fmt, en1, en2, ko1, ko2);
     sprinta(buf, format, en1, en2, ko1, ko2);
+    printf(buf);
+
+    printf("\n");
+    printf("char buf[1024];\n"
+	   "snprinta(buf, %ld, \"%s\", \"%s\", \"%s\" \"%s\", \"%s\");\n"
+	   "printf(buf);\n",
+	    size, fmt, en1, en2, ko1, ko2);
+    /* truncates "가" because of the size limit (bytes not display width!) */
+    snprinta(buf, size, format, en1, en2, ko1, ko2);
     printf(buf);
 
     free(fmt);

@@ -30,13 +30,22 @@ static int _vprintf(struct options *opts, const char *format, va_list ap)
 {
     int nbytes;
 
-    if(opts == NULL || (opts->stream == NULL && opts->_p_str == NULL))
+    if(opts == NULL || (opts->stream == NULL && opts->_str == NULL))
 	nbytes = vprintf(format, ap);
     else if(opts->stream)
 	nbytes = vfprintf(opts->stream, format, ap);
     else{
-	nbytes = vsprintf(opts->_p_str, format, ap);
-	opts->_p_str += nbytes;
+	if(opts->size >= 0){
+	    if((long int)opts->_size >= 0){
+		/* snprintf(str, 0, ...) prints garbage */
+		nbytes = vsnprintf(opts->_str, opts->_size, format, ap);
+		opts->_size -= nbytes;
+	    }
+	}else
+	    /* snprintf(str, negative, ...) is equivalent to snprintf(str, ...)
+	     * because size_t is unsigned */
+	    nbytes = vsprintf(opts->_str, format, ap);
+	opts->_str += nbytes;
     }
 
     return nbytes;

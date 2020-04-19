@@ -32,13 +32,15 @@
 struct options
 {
     FILE *stream;
-    char *str, *_p_str;
+    char *str, *_str;
+    size_t size, _size;
 };
 
 extern int wide_count(const char *str);
 extern int oprinta(struct options *opts, const char *format, va_list ap);
 extern int printa(const char *format, ...);
-extern int sprinta(char *str, const char *format, ...);
 extern int fprinta(FILE *stream, const char *format, ...);
+extern int sprinta(char *str, const char *format, ...);
+extern int snprinta(char *str, size_t size, const char *format, ...);
 
 #endif
