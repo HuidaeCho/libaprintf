@@ -10,7 +10,7 @@ The pipe character (`|`) is at column 10, not at 11 (10 characters from `%10s` p
 
 ![Ga aligned](ga-aligned.png "Ga aligned")
 
-This library tries to fix this alignment issue and defines the following functions:
+The libprinta library tries to fix this alignment issue and defines the following functions:
 * `int wide_count(const char *str)` counts the number of wide characters in a string,
 * `int printa(const char *format, ...)` adjusts the width of string specifiers to the display space instead of the number of bytes for wide characters and printf them using the adjusted display width,
 * `int sprinta(char *str, const char *format, ...)` is the `sprintf()` version of `printa()`, and
