@@ -23,14 +23,20 @@
 #include <stdarg.h>
 #include "printa.h"
 
-/* printf() wrapper for oprinta() */
+/* oprinta() wrapper for vprintf() */
+int vprinta(const char *format, va_list ap)
+{
+    return oprinta(NULL, format, ap);
+}
+
+/* oprinta() wrapper for printf() */
 int printa(const char *format, ...)
 {
     va_list ap;
     int nbytes;
 
     va_start(ap, format);
-    nbytes = oprinta(NULL, format, ap);
+    nbytes = vprinta(format, ap);
     va_end(ap);
 
     return nbytes;

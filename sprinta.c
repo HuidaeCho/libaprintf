@@ -23,19 +23,26 @@
 #include <stdarg.h>
 #include "printa.h"
 
-/* sprintf() wrapper for oprinta() */
-int sprinta(char *str, const char *format, ...)
+/* oprinta() wrapper for vsprintf() */
+int vsprinta(char *str, const char *format, va_list ap)
 {
     struct options opts;
-    va_list ap;
-    int nbytes;
 
     opts.stream = NULL;
     opts.str = opts._str = str;
     opts.size = -1;
 
+    return oprinta(&opts, format, ap);
+}
+
+/* oprinta() wrapper for sprintf() */
+int sprinta(char *str, const char *format, ...)
+{
+    va_list ap;
+    int nbytes;
+
     va_start(ap, format);
-    nbytes = oprinta(&opts, format, ap);
+    nbytes = vsprinta(str, format, ap);
     va_end(ap);
 
     return nbytes;

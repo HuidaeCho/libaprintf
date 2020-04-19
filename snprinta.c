@@ -23,19 +23,26 @@
 #include <stdarg.h>
 #include "printa.h"
 
-/* snprintf() wrapper for oprinta() */
-int snprinta(char *str, size_t size, const char *format, ...)
+/* oprinta() wrapper for vsnprintf() */
+int vsnprinta(char *str, size_t size, const char *format, va_list ap)
 {
     struct options opts;
-    va_list ap;
-    int nbytes;
 
     opts.stream = NULL;
     opts.str = opts._str = str;
     opts.size = opts._size = size;
 
+    return oprinta(&opts, format, ap);
+}
+
+/* oprinta wrapper for snprintf() */
+int snprinta(char *str, size_t size, const char *format, ...)
+{
+    va_list ap;
+    int nbytes;
+
     va_start(ap, format);
-    nbytes = oprinta(&opts, format, ap);
+    nbytes = vsnprinta(str, size, format, ap);
     va_end(ap);
 
     return nbytes;

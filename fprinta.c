@@ -24,19 +24,26 @@
 #include <stdarg.h>
 #include "printa.h"
 
-/* fprintf() wrapper for oprinta() */
-int fprinta(FILE *stream, const char *format, ...)
+/* oprinta() wrapper for vfprintf() */
+int vfprinta(FILE *stream, const char *format, va_list ap)
 {
     struct options opts;
-    va_list ap;
-    int nbytes;
 
     opts.stream = stream;
     opts.str = NULL;
     opts.size = -1;
 
+    return oprinta(&opts, format, ap);
+}
+
+/* oprinta() wrapper for fprintf() */
+int fprinta(FILE *stream, const char *format, ...)
+{
+    va_list ap;
+    int nbytes;
+
     va_start(ap, format);
-    nbytes = oprinta(&opts, format, ap);
+    nbytes = vfprinta(stream, format, ap);
     va_end(ap);
 
     return nbytes;

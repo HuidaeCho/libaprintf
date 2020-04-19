@@ -38,9 +38,15 @@ struct options
 
 extern int wide_count(const char *str);
 extern int oprinta(struct options *opts, const char *format, va_list ap);
+
 extern int printa(const char *format, ...);
 extern int fprinta(FILE *stream, const char *format, ...);
 extern int sprinta(char *str, const char *format, ...);
 extern int snprinta(char *str, size_t size, const char *format, ...);
+
+extern int vprinta(const char *format, va_list ap);
+extern int vfprinta(FILE *stream, const char *format, va_list ap);
+extern int vsprinta(char *str, const char *format, va_list ap);
+extern int vsnprinta(char *str, size_t size, const char *format, va_list ap);
 
 #endif
