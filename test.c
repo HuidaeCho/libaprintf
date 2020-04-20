@@ -24,34 +24,6 @@
 #include <stdlib.h>
 #include "printa.h"
 
-char *escape_newlines(const char *str)
-{
-    const char *p = str;
-    int count = 0, len = 0;
-    char *buf, *q;
-
-    while(*p){
-	if(*p++ == '\n')
-	    count++;
-	len++;
-    }
-
-    q = buf = (char *)malloc(len + count + 1);
-    p = str;
-
-    while(*p){
-	if(*p == '\n'){
-	    *q++ = '\\';
-	    *q++ = 'n';
-	}else
-	    *q++ = *p;
-	p++;
-    }
-    *q = 0;
-
-    return buf;
-}
-
 int main()
 {
     char buf[1024];
