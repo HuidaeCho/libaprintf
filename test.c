@@ -48,9 +48,9 @@ int main()
 
     printa("%-10.0s|%-10.0s|\n", "6 abcdefghij", "가나다라마바");
     printa("%-10.1s|%-10.1s|\n", "7 abcdefghij", "가나다라마바");
-    printa("%-*.*s|%-*.*s|\n", 10, 2, "8 abcdefghij", 10, 2, "가나다라마바");
-    printa("%-*.*s|%-*.*s|\n", 10, 3, "9 abcdefghij", 10, 3, "가나다라마바");
-    printa("%-*.*s|%-*.*s|\n", 10, 4, "A abcdefghij", 10, 4, "가나다라마바");
+    printa("%-10.*s|%-10.*s|\n", 2, "8 abcdefghij", 2, "가나다라마바");
+    printa("%-10.*s|%-10.*s|\n", 3, "9 abcdefghij", 3, "가나다라마바");
+    printa("%-*.4s|%-*.*s|\n", 10, "A abcdefghij", 10, 4, "가나다라마바");
     printa("%-*.*s|%-*.*s|\n", 10, 5, "B abcdefghij", 10, 5, "가나다라마바");
     printa("%-*.*s|%-*.*s|\n", 10, 6, "C abcdefghij", 10, 6, "가나다라마바");
     printa("%-*.*s|%-*.*s|\n", 10, 7, "D abcdefghij", 10, 7, "가나다라마바");
