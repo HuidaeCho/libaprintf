@@ -13,10 +13,13 @@ The pipe character (`|`) is at column 10, not at 11 (10 characters from `%-10s` 
 This misalignment issue occurs because CJK characters' byte length (3) and display length (2) are different.
 
 The libprinta library tries to fix this problem and defines the following functions:
-* `int wide_count(const char *str)` counts the number of wide characters in a string,
+* `int count_wide_chars(const char *str)` counts the number of wide characters in a string,
+* `int count_wide_chars_in_cols(const char *str, int ncols)` counts the number of wide characters in a string in a number of columns,
+* `int count_bytes_in_cols(const char *str, int ncols)` counts the number of bytes in a string in a number of columns,
 * `int printa(const char *format, ...)` adjusts the width of string specifiers to the display space instead of the number of bytes for wide characters and printf them using the adjusted display width,
+* `int fprinta(FILE *stream, const char *format, ...)` is the `fprintf()` version of `printa()`,
 * `int sprinta(char *str, const char *format, ...)` is the `sprintf()` version of `printa()`, and
-* `int fprinta(FILE *stream, const char *format, ...)` is the `fprintf()` version of `printa()`.
+* `int snprinta(char *str, const char *format, ...)` is the `snprintf()` version of `printa()`,
 
 ## Installation
 
