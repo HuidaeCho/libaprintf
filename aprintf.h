@@ -20,8 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-#ifndef _PRINTA_H_
-#define _PRINTA_H_
+#ifndef _APRINTF_H_
+#define _APRINTF_H_
 
 #include <stdio.h>
 #include <stdarg.h>
