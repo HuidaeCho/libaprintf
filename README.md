@@ -19,7 +19,7 @@ The libprinta library tries to fix this problem and defines the following functi
 * `int printa(const char *format, ...)` adjusts the width of string specifiers to the display space instead of the number of bytes for wide characters and printf them using the adjusted display width,
 * `int fprinta(FILE *stream, const char *format, ...)` is the `fprintf()` version of `printa()`,
 * `int sprinta(char *str, const char *format, ...)` is the `sprintf()` version of `printa()`, and
-* `int snprinta(char *str, const char *format, ...)` is the `snprintf()` version of `printa()`,
+* `int snprinta(char *str, size_t size, const char *format, ...)` is the `snprintf()` version of `printa()`,
 
 ## Installation
 
