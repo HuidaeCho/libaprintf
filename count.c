@@ -46,7 +46,7 @@ int count_wide_chars_in_cols(const char *str, int ncols)
     int count = 0, lead = 0;
 
     str--;
-    while(ncols >= 0 && *++str){
+    while(ncols >= 0 && *++str)
 	if((*str & 0xc0) != 0x80){
 	    lead = 1;
 	    ncols--;
@@ -55,7 +55,6 @@ int count_wide_chars_in_cols(const char *str, int ncols)
 	    ncols--;
 	    count++;
 	}
-    }
     if((*str & 0xc0) == 0x80)
 	count--;
 
@@ -68,7 +67,7 @@ int count_bytes_in_cols(const char *str, int ncols)
     const char *p = str - 1;
     int lead = 0;
 
-    while(ncols >= 0 && *++p){
+    while(ncols >= 0 && *++p)
 	if((*p & 0xc0) != 0x80){
 	    lead = 1;
 	    ncols--;
@@ -76,7 +75,6 @@ int count_bytes_in_cols(const char *str, int ncols)
 	    lead = 0;
 	    ncols--;
 	}
-    }
 
     return p - str;
 }
