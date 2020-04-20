@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Name:	aprintf.c (part of libaprintf, the aligned prinf C library)
+ * Name:	aprintf.c (part of libaprintf, the aligned printf C library)
  * Repository:	https://github.com/HuidaeCho/libaprintf
  * Author:	Huidae Cho
  * Since:	April 18, 2020
