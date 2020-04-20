@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Name:	snprinta.c (part of libprinta, the print-aligned C library)
- * Repository:	https://github.com/HuidaeCho/libprinta
+ * Name:	snaprintf.c (part of libaprintf, the aligned printf C library)
+ * Repository:	https://github.com/HuidaeCho/libaprintf
  * Author:	Huidae Cho
  * Since:	April 18, 2020
  *
@@ -21,10 +21,10 @@
  ******************************************************************************/
 
 #include <stdarg.h>
-#include "printa.h"
+#include "aprintf.h"
 
-/* oprinta() wrapper for vsnprintf() */
-int vsnprinta(char *str, size_t size, const char *format, va_list ap)
+/* oaprintf() wrapper for vsnprintf() */
+int vsnaprintf(char *str, size_t size, const char *format, va_list ap)
 {
     struct options opts;
 
@@ -32,17 +32,17 @@ int vsnprinta(char *str, size_t size, const char *format, va_list ap)
     opts.str = opts._str = str;
     opts.size = opts._size = size;
 
-    return oprinta(&opts, format, ap);
+    return oaprintf(&opts, format, ap);
 }
 
-/* oprinta wrapper for snprintf() */
-int snprinta(char *str, size_t size, const char *format, ...)
+/* oaprintf wrapper for snprintf() */
+int snaprintf(char *str, size_t size, const char *format, ...)
 {
     va_list ap;
     int nbytes;
 
     va_start(ap, format);
-    nbytes = vsnprinta(str, size, format, ap);
+    nbytes = vsnaprintf(str, size, format, ap);
     va_end(ap);
 
     return nbytes;

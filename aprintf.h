@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Name:	printa.h (part of libprinta, the print-aligned C library)
- * Repository:	https://github.com/HuidaeCho/libprinta
+ * Name:	aprintf.h (part of libaprintf, the aligned printf C library)
+ * Repository:	https://github.com/HuidaeCho/libaprintf
  * Author:	Huidae Cho
  * Since:	April 18, 2020
  *
@@ -36,16 +36,16 @@ struct options
 extern int count_wide_chars(const char *str);
 extern int count_wide_chars_in_cols(const char *str, int ncols);
 extern int count_bytes_in_cols(const char *str, int ncols);
-extern int oprinta(struct options *opts, const char *format, va_list ap);
+extern int oaprintf(struct options *opts, const char *format, va_list ap);
 
-extern int printa(const char *format, ...);
-extern int fprinta(FILE *stream, const char *format, ...);
-extern int sprinta(char *str, const char *format, ...);
-extern int snprinta(char *str, size_t size, const char *format, ...);
+extern int aprintf(const char *format, ...);
+extern int faprintf(FILE *stream, const char *format, ...);
+extern int saprintf(char *str, const char *format, ...);
+extern int snaprintf(char *str, size_t size, const char *format, ...);
 
-extern int vprinta(const char *format, va_list ap);
-extern int vfprinta(FILE *stream, const char *format, va_list ap);
-extern int vsprinta(char *str, const char *format, va_list ap);
-extern int vsnprinta(char *str, size_t size, const char *format, va_list ap);
+extern int vaprintf(const char *format, va_list ap);
+extern int vfaprintf(FILE *stream, const char *format, va_list ap);
+extern int vsaprintf(char *str, const char *format, va_list ap);
+extern int vsnaprintf(char *str, size_t size, const char *format, va_list ap);
 
 #endif

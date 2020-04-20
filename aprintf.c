@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Name:	fprinta.c (part of libprinta, the print-aligned C library)
- * Repository:	https://github.com/HuidaeCho/libprinta
+ * Name:	aprintf.c (part of libaprintf, the aligned prinf C library)
+ * Repository:	https://github.com/HuidaeCho/libaprintf
  * Author:	Huidae Cho
  * Since:	April 18, 2020
  *
@@ -20,30 +20,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-#include <stdio.h>
 #include <stdarg.h>
-#include "printa.h"
+#include "aprintf.h"
 
-/* oprinta() wrapper for vfprintf() */
-int vfprinta(FILE *stream, const char *format, va_list ap)
+/* oaprintf() wrapper for vprintf() */
+int vaprintf(const char *format, va_list ap)
 {
-    struct options opts;
-
-    opts.stream = stream;
-    opts.str = NULL;
-    opts.size = -1;
-
-    return oprinta(&opts, format, ap);
+    return oaprintf(NULL, format, ap);
 }
 
-/* oprinta() wrapper for fprintf() */
-int fprinta(FILE *stream, const char *format, ...)
+/* oaprintf() wrapper for printf() */
+int aprintf(const char *format, ...)
 {
     va_list ap;
     int nbytes;
 
     va_start(ap, format);
-    nbytes = vfprinta(stream, format, ap);
+    nbytes = vaprintf(format, ap);
     va_end(ap);
 
     return nbytes;

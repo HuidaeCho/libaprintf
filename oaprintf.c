@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Name:	fprinta.c self-contained version
- *		(part of libprinta, the print-aligned C library)
- * Repository:	https://github.com/HuidaeCho/libprinta
+ * Name:	oaprintf.c (part of libaprintf, the aligned printf C library)
+ * Repository:	https://github.com/HuidaeCho/libaprintf
  * Author:	Huidae Cho
  * Since:	April 18, 2020
  *
@@ -25,53 +24,71 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include "aprintf.h"
 
 /* printf(3) man page */
-#define CONVERSIONS "diouxXeEfFgGaAcsCSpnm%"
+#define CONVS "diouxXeEfFgGaAcsCSpnm%"
 
-/* count the number of wide characters in a string */
-int wide_count(const char *str)
+/* % + flags + width + precision + length + conversoin + NULL */
+#define SPEC_BUF_SIZE 16
+
+static int ovprintf(struct options *opts, const char *format, va_list ap)
 {
-    int count = 0, lead = 0;
+    int nbytes;
 
-    while(*str)
-	/* if the first two bits are 10 (0x80 = 1000 0000), this byte is
-	 * following a previous multi-byte character; only count the leading
-	 * byte */
-	if((*str++ & 0xc0) != 0x80)
-	    lead = 1;
-	else if(lead){
-	    lead = 0;
-	    count++;
-	}
+    if(opts == NULL || (opts->stream == NULL && opts->_str == NULL))
+	nbytes = vprintf(format, ap);
+    else if(opts->stream)
+	nbytes = vfprintf(opts->stream, format, ap);
+    else{
+	if((long int)opts->size >= 0){
+	    /* snprintf(str, 0, ...) does not alter str */
+	    nbytes = vsnprintf(opts->_str, opts->_size, format, ap);
+	    opts->_size -= nbytes;
+	}else
+	    /* snprintf(str, negative, ...) is equivalent to snprintf(str, ...)
+	     * because size_t is unsigned */
+	    nbytes = vsprintf(opts->_str, format, ap);
+	opts->_str += nbytes;
+    }
 
-    return count;
+    return nbytes;
+}
+
+static int oprintf(struct options *opts, const char *format, ...)
+{
+    va_list ap;
+    int nbytes;
+
+    va_start(ap, format);
+    nbytes = ovprintf(opts, format, ap);
+    va_end(ap);
+
+    return nbytes;
 }
 
 /* adjust the width of string specifiers to the display space intead of the
- * number of bytes for wide characters and fprintf them using the adjusted
- * display width
+ * number of bytes for wide characters and oprintf them using the adjusted
+ * display width; return -1 on an illegal specifier and -2 on too long a
+ * specifier
  *
  * compare
- *	fprintf(stdout, "%10s|\n%10s|\n", "ABCD", "가나");
+ *	printf("%10s|\n%10s|\n", "ABCD", "가나");
 -----------
       ABCD|
     가나|
 -----------
  * and
- *	fprinta(stdout, "%10s|\n%10s|\n", "ABCD", "가나");
+ *	oaprintf(&opts, "%10s|\n%10s|\n", "ABCD", "가나");
 -----------
       ABCD|
       가나|
 -----------
  */
-int fprinta(FILE *stream, const char *format, ...)
+int oaprintf(struct options *opts, const char *format, va_list ap)
 {
-    va_list ap;
-    char *fmt, *asis, *p, spec[10];
+    char *fmt, *asis, *p, spec[SPEC_BUF_SIZE];
     int nbytes = 0;
-
-    va_start(ap, format);
 
     /* make a copy so we can temporarily change the format string */
     p = asis = fmt = (char *)malloc(strlen(format) + 1);
@@ -83,34 +100,38 @@ int fprinta(FILE *stream, const char *format, ...)
 
 	    /* print the string before this specifier */
 	    *p = 0;
-	    nbytes += fprintf(stream, asis);
+	    nbytes += oprintf(opts, asis);
 	    *p = '%';
 
 	    /* skip % */
 	    while(*++q){
-		char *c = CONVERSIONS - 1;
+		char *c = CONVS - 1;
 
 		while(*++c && *q != *c);
 		if(*c){
 		    char tmp;
 		    /* found a conversion specifier */
 		    if(*c == 's'){
-			int width = -1, prec = -1, use_printf = 1;
-			char *p_tmp;
+			/* if this is a string specifier */
+			int width = -1, prec = -1, use_ovprintf = 1;
+			char *p_tmp, *s;
 			va_list ap_copy;
 
-			/* save this ap and use vprintf() for non-wide characters */
+			/* save this ap and use ovprintf() for non-wide
+			 * characters */
 			va_copy(ap_copy, ap);
 
-			/* if string */
 			*p_spec = 0;
 			p_spec = spec;
 			if(*p_spec == '-')
+			    /* alignment */
 			    p_spec++;
 			if(*p_spec == '*'){
+			    /* read width from next argument */
 			    width = va_arg(ap, int);
 			    p_spec++;
 			}else if(*p_spec >= '0' && *p_spec <= '9'){
+			    /* read width */
 			    p_tmp = p_spec;
 			    while(*p_spec >= '0' && *p_spec <= '9')
 				p_spec++;
@@ -120,11 +141,14 @@ int fprinta(FILE *stream, const char *format, ...)
 			    *p_spec = tmp;
 			}
 			if(*p_spec == '.'){
+			    /* precision */
 			    p_spec++;
 			    if(*p_spec == '*'){
+				/* read precision from next argument */
 				prec = va_arg(ap, int);
 				p_spec++;
 			    }else if(*p_spec >= '0' && *p_spec <= '9'){
+				/* read precision */
 				p_tmp = p_spec;
 				while(*p_spec >= '0' && *p_spec <= '9')
 				    p_spec++;
@@ -135,57 +159,69 @@ int fprinta(FILE *stream, const char *format, ...)
 			    }
 			}
 			if(*p_spec){
-			    /* really? */
+			    /* illegal string specifier? */
 			    va_end(ap_copy);
 			    return -1;
 			}
 
+			s = va_arg(ap, char *);
 			if(width > 0){
-			    char *s = va_arg(ap, char *);
-			    int wcount = wide_count(s);
+			    /* if width is specified */
+			    int wcount = count_wide_chars(s);
+
 			    if(wcount){
-				width += wcount;
-				prec += prec > 0 ? wcount : 0;
+				/* if there are wide characters */
+				if(prec > 0){
+				    int nbytes = count_bytes_in_cols(s, prec);
+
+				    width += count_wide_chars_in_cols(s, prec);
+				    prec = nbytes;
+				}else if(prec < 0)
+				    width += wcount;
 				p_spec = spec;
-				p_spec += sprintf(p_spec, "%%%s%d", spec[0] == '-' ? "-" : "", width);
+				p_spec += sprintf(p_spec, "%%%s%d",
+					spec[0] == '-' ? "-" : "", width);
 				if(prec >= 0)
 				    p_spec += sprintf(p_spec, ".%d", prec);
 				*p_spec++ = 's';
 				*p_spec = 0;
-				nbytes += fprintf(stream, spec, s);
-				use_printf = 0;
+				nbytes += oprintf(opts, spec, s);
+				use_ovprintf = 0;
 			    }
+			    /* else use ovprintf() as much as possible */
 			}
-			if(use_printf){
+			/* else use ovprintf() as much as possible */
+			if(use_ovprintf){
 			    tmp = *(q + 1);
 			    *(q + 1) = 0;
-			    nbytes += vfprintf(stream, p, ap_copy);
+			    nbytes += ovprintf(opts, p, ap_copy);
 			    *(q + 1) = tmp;
 			}
 
 			va_end(ap_copy);
 		    }else{
-			/* else use vprintf() */
+			/* else use ovprintf() for non-string specifiers */
 			tmp = *(q + 1);
 			*(q + 1) = 0;
-			nbytes += vfprintf(stream, p, ap);
+			nbytes += ovprintf(opts, p, ap);
 			*(q + 1) = tmp;
 		    }
 		    break;
-		}else
+		}else if(p_spec - spec < SPEC_BUF_SIZE - 2)
+		    /* 2 reserved for % and NULL */
 		    *p_spec++ = *q;
+		else
+		    return -2;
 	    }
-	    p = asis = ++q;
+	    asis = (p = q) + 1;
 	}
 	p++;
     }
 
     /* print the remaining string */
     *p = 0;
-    nbytes += fprintf(stream, asis);
+    nbytes += oprintf(opts, asis);
     *p = '%';
-
-    va_end(ap);
 
     return nbytes;
 }

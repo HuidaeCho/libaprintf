@@ -1,16 +1,16 @@
 CFLAGS=-Wall -Werror -fpic
 LDFLAGS=-shared
 
-all: libprinta.so test
+all: libaprinf.so test
 
 clean:
 	$(RM) -f *.o test
 
-libprinta.so: count.o oprinta.o printa.o fprinta.o sprinta.o snprinta.o
+libaprinf.so: count.o oaprinf.o aprinf.o faprinf.o saprinf.o snaprinf.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 test: test.c
-	$(CC) $(CFLAGS) -o $@ $< -L. -lprinta
+	$(CC) $(CFLAGS) -o $@ $< -L. -laprinf
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
