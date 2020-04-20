@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Name:	wide_count.c (part of libprinta, the print-aligned C library)
+ * Name:	count.c (part of libprinta, the print-aligned C library)
  * Repository:	https://github.com/HuidaeCho/libprinta
  * Author:	Huidae Cho
  * Since:	April 18, 2020
@@ -19,9 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
+#include <stdio.h>
 
 /* count the number of wide characters in a string */
-int wide_count(const char *str)
+int count_wide_chars(const char *str)
 {
     int count = 0, lead = 0;
 
@@ -37,4 +38,45 @@ int wide_count(const char *str)
 	}
 
     return count;
+}
+
+/* count the number of wide characters in a string in a number of columns */
+int count_wide_chars_in_cols(const char *str, int ncols)
+{
+    int count = 0, lead = 0;
+
+    str--;
+    while(ncols >= 0 && *++str){
+	if((*str & 0xc0) != 0x80){
+	    lead = 1;
+	    ncols--;
+	}else if(lead){
+	    lead = 0;
+	    ncols--;
+	    count++;
+	}
+    }
+    if((*str & 0xc0) == 0x80)
+	count--;
+
+    return count;
+}
+
+/* count the number of bytes in a string in a number of columns */
+int count_bytes_in_cols(const char *str, int ncols)
+{
+    const char *p = str - 1;
+    int lead = 0;
+
+    while(ncols >= 0 && *++p){
+	if((*p & 0xc0) != 0x80){
+	    lead = 1;
+	    ncols--;
+	}else if(lead){
+	    lead = 0;
+	    ncols--;
+	}
+    }
+
+    return p - str;
 }

@@ -28,7 +28,7 @@ make
 ./test
 ```
 
-![Test](test.png "Test")
+![Test](tests.png "Test")
 
 ## License
 

@@ -54,47 +54,36 @@ char *escape_newlines(const char *str)
 
 int main()
 {
-    char *format = "%-10s|%-10s|\n%-10s|%-10s|\n", *fmt,
-	 *en1 = "ab", *en2 = "cd", *ko1 = "가나", *ko2 = "마바",
-	 buf[1024];
-    size_t size = 26;
+    char buf[1024];
+    int size, written;
 
-    fmt = escape_newlines(format);
+    printf("======= printf =======\n");
+    printf("%-10s|%-10s|\n%-10s|%-10s|\n", "1 abcd", "efgh", "  가나", "다라");
 
-    printf("printf(\"%s\", \"%s\", \"%s\" \"%s\", \"%s\");\n",
-	    fmt, en1, en2, ko1, ko2);
-    printf(format, en1, en2, ko1, ko2);
+    printf("\n======= printa =======\n");
+    printa("%-10s|%-10s|\n%-10s|%-10s|\n", "2 abcd", "efgh", "  가나", "다라");
+    fprinta(stdout, "%-10s|%-10s|\n%-10s|%-10s|\n", "3 abcd", "efgh", "  가나", "다라");
 
-    printf("\n");
-    printf("printa(\"%s\", \"%s\", \"%s\" \"%s\", \"%s\");\n",
-	    fmt, en1, en2, ko1, ko2);
-    printa(format, en1, en2, ko1, ko2);
-
-    printf("\n");
-    printf("fprinta(stdout, \"%s\", \"%s\", \"%s\" \"%s\", \"%s\");\n",
-	    fmt, en1, en2, ko1, ko2);
-    fprinta(stdout, format, en1, en2, ko1, ko2);
-
-    printf("\n");
-    printf("char buf[1024];\n"
-	   "sprinta(buf, \"%s\", \"%s\", \"%s\" \"%s\", \"%s\");\n"
-	   "printf(buf);\n",
-	    fmt, en1, en2, ko1, ko2);
-    sprinta(buf, format, en1, en2, ko1, ko2);
+    sprinta(buf, "%d%9s|%10s|\n%10s|%10s|\n", 4, "abcd", "efgh", "  가나", "다라");
     printf(buf);
 
-    printf("\n");
-    printf("char buf[1024];\n"
-	   "snprinta(buf, %ld, \"%s\", \"%s\", \"%s\" \"%s\", \"%s\");\n"
-	   "printf(buf);\n",
-	    size, fmt, en1, en2, ko1, ko2);
-    /* truncates "가" because of the size limit (bytes not display width!) */
-    snprinta(buf, size, format, en1, en2, ko1, ko2);
+    /* truncates "라" because of the size limit (bytes not display width!) */
+    size = 47;
+    written = snprinta(buf, size, "%d%9s|%10s|\n%10s|%10s|\n", 5, "abcd", "efgh", "  가나", "다라");
     printf(buf);
+    if(written >= size)
+	printf("\n");
 
-    printa("\n%-*.*s|%-*.*s|\n", 10, 2, "abcd", 10, 2, "가나다라");
-
-    free(fmt);
+    printa("%-10.0s|%-10.0s|\n", "6 abcdefghij", "가나다라마바");
+    printa("%-10.1s|%-10.1s|\n", "7 abcdefghij", "가나다라마바");
+    printa("%-*.*s|%-*.*s|\n", 10, 2, "8 abcdefghij", 10, 2, "가나다라마바");
+    printa("%-*.*s|%-*.*s|\n", 10, 3, "9 abcdefghij", 10, 3, "가나다라마바");
+    printa("%-*.*s|%-*.*s|\n", 10, 4, "A abcdefghij", 10, 4, "가나다라마바");
+    printa("%-*.*s|%-*.*s|\n", 10, 5, "B abcdefghij", 10, 5, "가나다라마바");
+    printa("%-*.*s|%-*.*s|\n", 10, 6, "C abcdefghij", 10, 6, "가나다라마바");
+    printa("%-*.*s|%-*.*s|\n", 10, 7, "D abcdefghij", 10, 7, "가나다라마바");
+    printa("%-*.*s|%-*.*s|\n", 10, 8, "E abcdefghij", 10, 8, "가나다라마바");
+    printa("%-*.*s|%-*.*s|\n", 10, 10, "F abcdefghij", 10, 10, "가나다라마바");
 
     exit(0);
 }

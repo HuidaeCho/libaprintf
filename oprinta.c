@@ -167,12 +167,17 @@ int oprinta(struct options *opts, const char *format, va_list ap)
 			s = va_arg(ap, char *);
 			if(width > 0){
 			    /* if width is specified */
-			    int wcount = wide_count(s);
+			    int wcount = count_wide_chars(s);
 
 			    if(wcount){
 				/* if there are wide characters */
-				width += wcount;
-				prec += prec > 0 ? wcount : 0;
+				if(prec > 0){
+				    int nbytes = count_bytes_in_cols(s, prec);
+
+				    width += count_wide_chars_in_cols(s, prec);
+				    prec = nbytes;
+				}else if(prec < 0)
+				    width += wcount;
 				p_spec = spec;
 				p_spec += sprintf(p_spec, "%%%s%d",
 					spec[0] == '-' ? "-" : "", width);

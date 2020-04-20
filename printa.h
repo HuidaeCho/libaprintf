@@ -33,7 +33,9 @@ struct options
     size_t size, _size;
 };
 
-extern int wide_count(const char *str);
+extern int count_wide_chars(const char *str);
+extern int count_wide_chars_in_cols(const char *str, int ncols);
+extern int count_bytes_in_cols(const char *str, int ncols);
 extern int oprinta(struct options *opts, const char *format, va_list ap);
 
 extern int printa(const char *format, ...);
