@@ -32,7 +32,7 @@ int main()
     printf("======= printf =======\n");
     printf("%-10s|%-10s|\n%-10s|%-10s|\n", "1 abcd", "efgh", "  가나", "다라");
 
-    printf("\n======= aprintf =======\n");
+    printf("\n====== aprintf =======\n");
     aprintf("%-10s|%-10s|\n%-10s|%-10s|\n", "2 abcd", "efgh", "  가나", "다라");
     faprintf(stdout, "%-10s|%-10s|\n%-10s|%-10s|\n", "3 abcd", "efgh", "  가나", "다라");
 
