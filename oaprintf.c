@@ -171,13 +171,10 @@ int oaprintf(struct options *opts, const char *format, va_list ap)
 
 			    if(wcount){
 				/* if there are wide characters */
-				if(prec > 0){
-				    int nwchars, nbytes;
-
-				    count_in_cols(s, prec, &nwchars, &nbytes);
-				    width += nwchars;
-				    prec = nbytes;
-				}else if(prec < 0)
+				if(prec > 0)
+				    width += count_wide_chars_in_cols(s, prec,
+								      &prec);
+				else if(prec < 0)
 				    width += wcount;
 				p_spec = spec;
 				p_spec += sprintf(p_spec, "%%%s%d",

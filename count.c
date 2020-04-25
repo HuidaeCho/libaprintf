@@ -42,10 +42,10 @@ int count_wide_chars(const char *str)
 
 /* count the numbers of wide characters and bytes in a string in a number of
  * columns */
-void count_in_cols(const char *str, int ncols, int *nwchars, int *nbytes)
+int count_wide_chars_in_cols(const char *str, int ncols, int *nbytes)
 {
     const char *p = str - 1;
-    int lead = 0, chars = 0, bytes;
+    int lead = 0, nwchars = 0;
 
     /* count the numbers of wide characters and bytes in one loop */
     while(ncols >= 0 && *++p)
@@ -59,39 +59,16 @@ void count_in_cols(const char *str, int ncols, int *nwchars, int *nbytes)
 	     * consume more than two columns (leading and second bytes) */
 	    lead = 0;
 	    ncols--;
-	    chars++;
+	    nwchars++;
 	}
 
     /* if the current byte after ncols is still part of a multi-byte character,
      * trash it because it's not a full wide character */
     if((*p & 0xc0) == 0x80)
-	chars--;
+	nwchars--;
 
     /* see how many bytes we have advanced */
-    bytes = p - str;
-
-    if(nwchars)
-	*nwchars = chars;
-    if(nbytes)
-	*nbytes = bytes;
-}
-
-/* count the number of wide characters in a string in a number of columns */
-int count_wide_chars_in_cols(const char *str, int ncols)
-{
-    int nwchars;
-
-    count_in_cols(str, ncols, &nwchars, NULL);
+    *nbytes = p - str;
 
     return nwchars;
-}
-
-/* count the number of bytes in a string in a number of columns */
-int count_bytes_in_cols(const char *str, int ncols)
-{
-    int nbytes;
-
-    count_in_cols(str, ncols, NULL, &nbytes);
-
-    return nbytes;
 }
