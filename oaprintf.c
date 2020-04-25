@@ -172,9 +172,10 @@ int oaprintf(struct options *opts, const char *format, va_list ap)
 			    if(wcount){
 				/* if there are wide characters */
 				if(prec > 0){
-				    int nbytes = count_bytes_in_cols(s, prec);
+				    int nwchars, nbytes;
 
-				    width += count_wide_chars_in_cols(s, prec);
+				    count_in_cols(s, prec, &nwchars, &nbytes);
+				    width += nwchars;
 				    prec = nbytes;
 				}else if(prec < 0)
 				    width += wcount;

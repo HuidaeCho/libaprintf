@@ -34,6 +34,7 @@ struct options
 };
 
 extern int count_wide_chars(const char *str);
+extern void count_in_cols(const char *str, int ncols, int *nwchars, int *nbytes);
 extern int count_wide_chars_in_cols(const char *str, int ncols);
 extern int count_bytes_in_cols(const char *str, int ncols);
 extern int oaprintf(struct options *opts, const char *format, va_list ap);
