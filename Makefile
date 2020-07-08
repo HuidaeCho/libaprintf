@@ -4,7 +4,7 @@ LDFLAGS=-shared
 all: libaprintf.so test
 
 clean:
-	$(RM) -f *.o test
+	$(RM) *.o test
 
 libaprintf.so: count.o oaprintf.o aprintf.o faprintf.o saprintf.o snaprintf.o
 	$(CC) $(LDFLAGS) -o $@ $^
